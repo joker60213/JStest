@@ -54,4 +54,5 @@ setCounterMessage(message) {
     this.searchCounter.textContent = message;
 }
 
+
 }

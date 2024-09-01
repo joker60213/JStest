@@ -16,6 +16,7 @@ export class Search {
         this.api = api;
         this.log = log;
 
+
         this.view.searchInput.addEventListener ('keyup', this.debounce(this.loadUsers.bind(this), 500));
         this.view.loadMoreBtn.addEventListener ('click', this.loadMoreUsers.bind(this));
         this.currentPage = 1;
@@ -39,27 +40,34 @@ export class Search {
         this.usersRequest(this.view.searchInput.value);
     }
 
-   async usersRequest (searchValue) {
+    async usersRequest(searchValue) {
         let totalCount;
         let users;
         let message;
-    
+
+        //проверка на пустую строку
+        if (!searchValue.trim()) {
+            alert ('Поисковый запрос не может быть пустым');
+            return;
+        }
+
+        //обновил без then
         try {
-            await this.api.loadUsers(searchValue, this.currentPage).then((res) => {
-                res.json().then(res => { 
-                    users = res.items;
-                    totalCount = res.total_count;
-                    message = this.log.counterMessage(totalCount);
-                    this.setUsersCount (this.usersCount + res.items.length);
-                    this.view.setCounterMessage(message);
-                    this.view.toggleLoadMoreBtn(totalCount > 20 && this.usersCount !== totalCount);
-                    users.forEach(user => this.view.createUsers(user))
-                })
-            })
+            const res = await this.api.loadUsers(searchValue, this.currentPage);
+            const data = await res.json();
+    
+            users = data.items;
+            totalCount = data.total_count;
+            message = this.log.counterMessage(totalCount);
+
+            this.setUsersCount(this.usersCount + data.items.length);
+            this.view.setCounterMessage(message);
+            this.view.toggleLoadMoreBtn(totalCount > 5 && this.usersCount !== totalCount);
+            users.forEach(user => this.view.createUsers(user));
         } catch (e) {
             console.log('Ошибка при запросе к API GitHub: ' + e);
         }
-}
+    }
 
     clearUsers () {
         this.view.usersList.innerHTML = '';

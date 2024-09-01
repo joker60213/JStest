@@ -4,3 +4,4 @@ export class Log {
         return counter ? `Найдено ${counter} пользователей` : 'ничего не найдно';
     }
 }
+
