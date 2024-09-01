@@ -12,6 +12,7 @@ export class View {
         this.searchLine.append(this.searchCounter);
 
 
+
         this.usersWrapper = this.createElement ('div', 'users-wrapper');
         this.usersList = this.createElement ('ul', 'users');
         this.usersWrapper.append (this.usersList)
@@ -46,7 +47,11 @@ export class View {
     }
 
 toggleLoadMoreBtn (show) {
-    this.loadMoreBtn.style.display = show ? 'block' : none;
+    this.loadMoreBtn.style.display = show ? 'block' : 'none';
+}
+
+setCounterMessage(message) {
+    this.searchCounter.textContent = message;
 }
 
 }
